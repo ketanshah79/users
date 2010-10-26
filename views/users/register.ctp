@@ -9,7 +9,9 @@
  * @license MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 ?>
-<?php $openIdAuthData = $this->Session->read('openIdAuthData');?>
+<?php 
+	// $openIdAuthData = $this->Session->read('openIdAuthData');
+?>
 <h2><?php __d('users', 'Account registration'); ?></h2>
 <fieldset>
 	<legend><?php __d('users', 'Details');?></legend>

@@ -29,18 +29,8 @@ class User extends UsersAppModel {
  *
  * @var array
  */
-	public $actsAs = array(
-		'Search.Searchable',
-		'Utils.Sluggable' => array(
-			'label' => 'username',
-			'method' => 'multibyteSlug'));
+	public $actsAs = array(	);
 
-/**
- * Additional Find methods
- *
- * @var array
- */
-	public $_findMethods = array('search' => true);
 
 /**
  * @todo comment me
@@ -533,7 +523,7 @@ class User extends UsersAppModel {
  * @param string $results Result data
  * @return array
  */
-	protected function _findSearch($state, $query, $results = array()) {
+/*	protected function _findSearch($state, $query, $results = array()) {
 		if ($state == 'before') {
 			$this->Behaviors->attach('Containable', array('autoFields' => false));
 			$results = $query;
@@ -595,7 +585,7 @@ class User extends UsersAppModel {
 			return $results;
 		}
 	}
-
+*/
 /**
  * Customized paginateCount method
  *

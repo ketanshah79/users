@@ -16,4 +16,8 @@
  * @subpackage users.controllers
  */
 class UsersAppController extends AppController {
+	
+	function beforeFilter(){
+		
+	}
 }

@@ -57,6 +57,10 @@ class UsersController extends UsersAppController {
 		parent::beforeFilter();
 		$this->Auth->allow('register', 'reset', 'verify', 'logout', 'index', 'view', 'reset_password');
 
+		if (($this->action == 'login') && ($this->RequestHandler->isGet())) {
+			$this->Auth->enabled = false;
+		}
+		
 		if ($this->action == 'register') {
 			$this->Auth->enabled = false;
 		}
@@ -263,30 +267,38 @@ class UsersController extends UsersAppController {
  * @return void
  */
 	public function login() {
-		if ($this->Auth->user()) {
-			$this->User->id = $this->Auth->user('id');
-			$this->User->saveField('last_login', date('Y-m-d H:i:s'));
-
-			if ($this->here == $this->Auth->loginRedirect) {
-				$this->Auth->loginRedirect = '/';
-			}
-
-			$this->Session->setFlash(sprintf(__d('users', '%s you have successfully logged in', true), $this->Auth->user('username')));
-			if (!empty($this->data)) {
-				$data = $this->data[$this->modelClass];
-				$this->_setCookie();
-			}
-
-			if (empty($data['return_to'])) {
-				$data['return_to'] = null;
-			}
-			$this->redirect($this->Auth->redirect($data['return_to']));
-		}
-
-		if (isset($this->params['named']['return_to'])) {
-			$this->set('return_to', urldecode($this->params['named']['return_to']));
+		if($this->RequestHandler->isGet()){
+			$this->status = ($this->Auth->user('id')) ? 200 : 404;
+			$user = $this->Auth->user();
+			debug($user);
+			$user = $user['User'];
+			$this->set(compact('user')); 
 		} else {
-			$this->set('return_to', false);
+			$user = $this->User->find('first', array(
+					    'conditions' => array(
+					    				'User.email' => $this->data['User']['email'],
+										'User.passwd' => $this->Auth->password($this->data['User']['passwd'])
+											),
+					    'contain' => array(), 
+					)); 
+			if ($user) {
+				unset($user['User']['passwd']);
+				$this->Session->write('Auth', $user);
+				$this->User->saveField('last_login', date('Y-m-d H:i:s'));
+				
+				$redir = (empty($_GET['redir'])) ? "/" : $_GET['redir'];
+				
+				if (!empty($this->data)) {
+					$data = $this->data[$this->modelClass];
+					$this->_setCookie();
+				}
+				
+				$this->status = 200;
+				$this->set(compact('redir'));
+				 
+			} else {
+				$this->status = 404;
+			}
 		}
 	}
 

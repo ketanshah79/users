@@ -20,7 +20,6 @@
 		echo $this->Form->input('passwd',  array(
 			'label' => __d('users', 'Password', true)));
 		echo __d('users', 'Remember Me') . $this->Form->checkbox('remember_me');
-		echo $this->Form->hidden('User.return_to', array('value' => $return_to));
 		echo $this->Form->end(__d('users', 'Submit', true));
 	?>
 </fieldset>
